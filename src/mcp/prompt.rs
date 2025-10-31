@@ -3,6 +3,7 @@ use serde::Serialize;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct PromptArgument {
+    pub date: String,
     pub description: String,
     pub name: String,
     #[serde(default)]

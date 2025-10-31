@@ -6,6 +6,7 @@ use serde::Serialize;
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct ArgumentWithInput {
+    pub date: String,
     pub description: String,
     pub input: String,
     pub required: bool,
@@ -13,6 +14,10 @@ pub struct ArgumentWithInput {
 }
 
 impl ArgumentWithInput {
+    pub fn rhai_date(&mut self) -> String {
+        self.date.clone()
+    }
+
     pub fn rhai_description(&mut self) -> String {
         self.description.clone()
     }
@@ -34,6 +39,7 @@ impl CustomType for ArgumentWithInput {
     fn build(mut builder: TypeBuilder<Self>) {
         builder
             .with_name("ArgumentWithInput")
+            .with_get("date", Self::rhai_date)
             .with_get("description", Self::rhai_description)
             .with_get("input", Self::rhai_input)
             .with_get("required", Self::rhai_required)

@@ -44,11 +44,13 @@ impl PromptController for PromptDocumentController {
                     |(
                         name,
                         Argument {
+                            date,
                             description,
                             required,
                             title,
                         },
                     )| PromptArgument {
+                        date,
                         description,
                         name,
                         required,
@@ -124,6 +126,7 @@ mod tests {
         +++
         description = "test prompt description"
         title = "Help me with finishing the task"
+        date = "31/10/2024"
 
         [arguments.objective]
         description = "Describe what you are trying to do"

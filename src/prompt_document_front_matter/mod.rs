@@ -17,6 +17,7 @@ use crate::prompt_document_front_matter::argument_with_input::ArgumentWithInput;
 #[serde(deny_unknown_fields)]
 pub struct PromptDocumentFrontMatter {
     pub arguments: HashMap<String, Argument>,
+    pub date: String,
     pub description: String,
     pub title: String,
 }
@@ -33,6 +34,7 @@ impl PromptDocumentFrontMatter {
                 |(
                     name,
                     Argument {
+                        date,
                         description,
                         required,
                         title,
@@ -41,6 +43,7 @@ impl PromptDocumentFrontMatter {
                     Ok((
                         name.clone(),
                         ArgumentWithInput {
+                            date,
                             description,
                             input: inputs
                                 .get(&name)
@@ -53,6 +56,10 @@ impl PromptDocumentFrontMatter {
                 },
             )
             .collect()
+    }
+
+    fn rhai_date(&mut self) -> String {
+        self.date.clone()
     }
 
     fn rhai_description(&mut self) -> String {
@@ -68,6 +75,7 @@ impl CustomType for PromptDocumentFrontMatter {
     fn build(mut builder: TypeBuilder<Self>) {
         builder
             .with_name("PromptDocumentFrontMatter")
+            .with_get("date", Self::rhai_date)
             .with_get("description", Self::rhai_description)
             .with_get("title", Self::rhai_title);
     }
