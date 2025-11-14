@@ -22,9 +22,11 @@ fn default_render() -> bool {
 //     pub content: String,
 // }
 
-#[derive(Clone, Debug, Deserialize, Hash, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct ContentDocumentFrontMatter {
+    #[serde(default)]
+    pub data: Map,
     pub description: String,
     #[serde(default)]
     pub id: Option<String>,
@@ -48,6 +50,7 @@ impl ContentDocumentFrontMatter {
     #[cfg(test)]
     pub fn mock(name: &str) -> Self {
         Self {
+            data: Default::default(),
             description: "".to_string(),
             id: None,
             last_updated_at: None,
@@ -62,6 +65,10 @@ impl ContentDocumentFrontMatter {
 }
 
 impl ContentDocumentFrontMatter {
+    fn rhai_data(&mut self) -> Map {
+        self.data.clone()
+    }
+
     fn rhai_description(&mut self) -> String {
         self.description.clone()
     }
@@ -83,6 +90,7 @@ impl CustomType for ContentDocumentFrontMatter {
     fn build(mut builder: TypeBuilder<Self>) {
         builder
             .with_name("ContentDocumentFrontMatter")
+            .with_get("data", Self::rhai_data)
             .with_get("description", Self::rhai_description)
             .with_get("props", Self::rhai_props)
             .with_get("render", Self::rhai_render)
